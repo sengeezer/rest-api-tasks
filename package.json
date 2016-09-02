@@ -1,0 +1,16 @@
+{
+  "name": "rest-api",
+  "version": "0.0.1",
+  "description": "A simple RESTful API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "simple",
+    "rest",
+    "API"
+  ],
+  "author": "Fabio Albertin",
+  "license": "MIT"
+}
