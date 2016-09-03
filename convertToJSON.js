@@ -17,7 +17,23 @@ rl.on('line', (line) => {
   let filename = tline.match(/[^\\]*\.(\w+)$/);
 
   if(filename && filename[1] == 'txt') {
-      console.log('valid filename');
+      console.log('valid filename: ' + filename[0]);
+      const rlf = readline.createInterface({
+        input: fs.createReadStream('./' + filename[0]),
+        output: process.stdout,
+        terminal: false
+      });
+
+      let targetFile = './' + filename[0] + '.json';
+
+      let target = fs.openSync(targetFile, 'w');
+
+      rlf.on('line', (line) => {
+        let toWrite = line + '\n';
+        fs.write(target, toWrite);
+      });
+
+      console.log('Completed conversion');
   }
 
   else {
