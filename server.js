@@ -5,8 +5,8 @@ var app = express();
 var bodyParser = require('body-parser');
 
 var Word = require('./models/word');
-// Retrieve data from a POST
 
+// Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
