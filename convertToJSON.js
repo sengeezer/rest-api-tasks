@@ -29,7 +29,7 @@ rl.on('line', (line) => {
       let target = fs.openSync(targetFile, 'w');
 
       rlf.on('line', (line) => {
-        let toWrite = line + '\n';
+        let toWrite = '{"name": "' + line + '"},' + '\n';
         fs.write(target, toWrite);
       });
 

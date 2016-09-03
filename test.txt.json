@@ -1,4 +1,4 @@
-test
-word
-dictionary
-sausages
+{"name": "test"},
+{"name": "dictionary"},
+{"name": "word"},
+{"name": "sausages"},
