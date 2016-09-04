@@ -93,6 +93,16 @@ router.route('/words/:word_id')
       });
   });
 
+  router.route('/words/name/:word_name')
+    .get(function(req, res){
+      Word.findByName(req.params.word_name, function(err, word){
+        if (err) {
+          res.send(err);
+        }
+
+        res.json(word);
+      })
+    });
 
 // Define routes
 app.use('/api', router);
