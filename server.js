@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 
 var Word = require('./models/word');
 
+var numPads = require('./numPads');
+
 // Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
