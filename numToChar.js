@@ -22,13 +22,19 @@ function assembleSlotVariants(numArr) {
 }
 
 // first loop: first slot[0]...first slot[n]
-// second loop: second loop[0]...second loop[n]
+// second loop: second slot[0]...second slot[n]
 // ...
-// n loop: n loop[0]...n loop[n]
+// n loop: n slot[0]...n slot[n]
 //
 // N: eliminate any duplicates
 
 var numToChar = function(numbers) {
+  var numArr = Array.from(numbers);
+  // console.log(numbers);
+  return assembleSlotVariants(numArr);
+};
+
+var numToCharOld = function(numbers) {
   var letters,
       lettersArr;
   var numArr = Array.from(numbers);
@@ -43,6 +49,7 @@ var numToChar = function(numbers) {
   return letters;
 }
 
-module.exports {
-  numToChar: numToChar
+module.exports = {
+  numToChar: numToChar,
+  numToCharOld: numToCharOld
 };

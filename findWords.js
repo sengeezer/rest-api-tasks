@@ -1,17 +1,17 @@
 
-var numToChar = require('./numToChar');
+var numToChar = require('./numToChar').numToChar;
 
 // Find any word candidates from numbers entered
 var findWords = function(inputNum) {
-  if (typeof inputNum == 'number') {
+  if (typeof inputNum == 'string') {
     return numToChar(inputNum);
   }
 
   else {
-    return 'NaN';
+    return 'unexpeted input, type: ' + typeof inputNum;
   }
 };
 
-module.exports {
+module.exports = {
   findWords: findWords
 };

@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 
 var Word = require('./models/word');
 
-var findWords = require('./findWords');
+var findWords = require('./findWords').findWords;
 
 // Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -108,8 +108,18 @@ router.route('/words/:word_id')
 
     router.route('/words/number/:word_number')
       .get(function(req, res){
-        var wordsFound = findWords(req.params.word_number);
+        var numberString = req.params.word_number;
+
+        if(numberString.includes('0') || numberString.includes('1')) {
+          res.json({ message: '0 or 1 are not valid phoneword numbers'});
+        }
+
+        else {
+          var wordsFound = findWords(numberString);
+          res.json(wordsFound);
+        }
         // check word candidates against dictionary
+        /*
         Word.findByName(wordsFound[0], function(err, word){
           if (err) {
             res.send(err);
@@ -117,6 +127,9 @@ router.route('/words/:word_id')
 
           res.json(word);
         })
+        */
+
+
       });
 
 // Define routes

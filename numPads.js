@@ -54,7 +54,7 @@ var numPad = {
   '9': ['w','x','y','z']
 };
 
-module.exports {
+module.exports = {
   numPadPress: numPadPress,
   numPad: numPad
 };
