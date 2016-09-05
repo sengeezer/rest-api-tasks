@@ -106,6 +106,19 @@ router.route('/words/:word_id')
       })
     });
 
+    router.route('/words/number/:word_number')
+      .get(function(req, res){
+        var wordsFound = findWords(req.params.word_number);
+        // check word candidates against dictionary
+        Word.findByName(wordsFound[0], function(err, word){
+          if (err) {
+            res.send(err);
+          }
+
+          res.json(word);
+        })
+      });
+
 // Define routes
 app.use('/api', router);
 

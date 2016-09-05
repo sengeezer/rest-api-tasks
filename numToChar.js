@@ -1,3 +1,4 @@
+var numPads = require('./numPads');
 
 var numToChar = function(numbers) {
   var letters,
@@ -6,7 +7,7 @@ var numToChar = function(numbers) {
 
 
   for (var i=0; i < numArr.length; i++) {
-    var letter = numPad[parts[i].substring(0,1)][parts[i].length];
+    var letter = numPads.numPad[numArr[i].substring(0,1)][numArr[i].length];
     lettersArr.push(letter);
   }
 
