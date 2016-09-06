@@ -116,20 +116,25 @@ router.route('/words/:word_id')
 
         else {
           var wordsFound = findWords(numberString);
-          res.json(wordsFound);
-        }
-        // check word candidates against dictionary
-        /*
-        Word.findByName(wordsFound[0], function(err, word){
-          if (err) {
-            res.send(err);
+          // res.json(wordsFound);
+          var confirmedWords = [];
+
+          // check word candidates against dictionary
+
+          for (var i = 0; i < wordsFound.length; i++) {
+            Word.findByName(wordsFound[i], function(err, word){
+              if (err) {
+                res.send(err);
+              }
+              if (word !== []) {
+                confirmedWords.push(word);
+              }
+            })
           }
-
-          res.json(word);
-        })
-        */
+          res.json(confirmedWords);
 
 
+        }
       });
 
 // Define routes

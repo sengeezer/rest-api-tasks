@@ -53,8 +53,22 @@ var numPad = {
   '8': ['t','u','v'],
   '9': ['w','x','y','z']
 };
+// 22738275
+var numPadSimple = [
+  [' '],
+  [''],
+  ['a','b','c'],
+  ['d','e','f'],
+  ['g','h','i'],
+  ['j','k','l'],
+  ['m','n','o'],
+  ['p','q','r','s'],
+  ['t','u','v'],
+  ['w','x','y','z']
+];
 
 module.exports = {
   numPadPress: numPadPress,
-  numPad: numPad
+  numPad: numPad,
+  numPadSimple: numPadSimple
 };
