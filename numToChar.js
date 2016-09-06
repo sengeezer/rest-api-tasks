@@ -17,7 +17,7 @@ function assembleSlotVariants(numArr) {
   for (var i = 0; i < numArr.length; i++) {
     assembled[i] = getSlotVariants(numArr[i]);
   }
-  // assembled = array of only possibilities for each slot
+  // assembled = array (of arrays) of only possibilities for each slot
   return assembled;
 }
 
@@ -28,10 +28,37 @@ function assembleSlotVariants(numArr) {
 //
 // N: eliminate any duplicates
 
+var processSlotVariants = function(svs) {
+  // n = svs.length
+  // i = current slot
+  // j = current variant
+  // one loop = select slot, iterate over all variants
+
+  var result = '',
+      summaryResult = [];
+  for (var i = 0; i < svs.length-1; i++) {
+    for (var j = 0; j < svs[i].length; j++) {
+      //
+      // console.log(svs[i][j]);
+      for (var k = 0; k < svs[i+1].length; k++) {
+        if (svs[j][k] !== undefined) {
+          result += svs[j][k];
+        }
+      }
+
+      summaryResult.push(result);
+      result = [];
+    }
+  }
+
+  return summaryResult;
+}
+
 var numToChar = function(numbers) {
   var numArr = Array.from(numbers);
-  // console.log(numbers);
-  return assembleSlotVariants(numArr);
+  var slotVariants = assembleSlotVariants(numArr);
+
+  return processSlotVariants(slotVariants);
 };
 
 var numToCharOld = function(numbers) {

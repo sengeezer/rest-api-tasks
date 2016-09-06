@@ -49,6 +49,7 @@ app.post('/calculate', function(req, res){
         var resultString = combinationList[j]; // RS -> CL entry
         for (var k = 0; k < buttons[numString[i]].length; k++) { // each entry in current number's child array
           prevCombinationlist.push(resultString + buttons[numString[i]][k]);
+          // add value of entry to PCL
         }
       }
       combinationList = prevCombinationlist; // for each number, CL gets added to
