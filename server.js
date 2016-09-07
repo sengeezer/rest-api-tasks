@@ -116,41 +116,51 @@ router.route('/words/:word_id')
 
         else {
           var wordsFound = findWords(numberString);
-          // res.json(wordsFound);
+
           var confirmedWords = [];
 
           // check word candidates against dictionary
           function verifyWord(req, res) {
-            // console.log(req);
-                var query = Word.find({name: req});
-                query.exec(function (err, result){
-                  if (!err) {
-                    var newResult = JSON.stringify(result);
-                    // console.log(String(result) !== '');
-                    if (String(result) !== '') {
-                      console.log(newResult);
-                      res.send(newResult);
-                    }
-                  }
+            var query = Word.find({name: req});
 
-                  else {
-                    res.send('Error in second query: ' + err);
-                  }
-                });
+            query.exec(function (err, result){
+              if (!err) {
+                var newResult = JSON.stringify(result);
 
+                if (String(result) !== '') {
+                  res(newResult);
+                }
+              }
 
+              else {
+                res('Error in query: ' + err);
+              }
+            });
           }
-
 
           for (var i = 0; i < wordsFound.length; i++) {
-              var tmpRes = verifyWord(wordsFound[i], res);
-              if (tmpRes !== undefined) {
-                confirmedWords.push(tmpRes);
-              }
+              // var tmpRes = 0;
+              verifyWord(wordsFound[i], function(res){
+                if (res) {
+                  console.log('res: ' + res);
+                  confirmedWords.push(res);
+                }
+
+                else {
+                  console.log('vW failed');
+                }
+              });
+              //if (prom !== undefined) {
+                // console.log('prom: ' + prom);
+              //}
+              // prom.then(function (doc) {
+              //   console.log('doc: ' + doc);
+              // });
+              // if (tmpRes !== undefined) {
+              //   confirmedWords.push(tmpRes);
+              // }
           }
           res.json(confirmedWords);
-
-
         }
       });
 
