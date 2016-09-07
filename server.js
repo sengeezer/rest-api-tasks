@@ -120,16 +120,33 @@ router.route('/words/:word_id')
           var confirmedWords = [];
 
           // check word candidates against dictionary
+          function verifyWord(req, res) {
+            // console.log(req);
+                var query = Word.find({name: req});
+                query.exec(function (err, result){
+                  if (!err) {
+                    var newResult = JSON.stringify(result);
+                    // console.log(String(result) !== '');
+                    if (String(result) !== '') {
+                      console.log(newResult);
+                      res.send(newResult);
+                    }
+                  }
+
+                  else {
+                    res.send('Error in second query: ' + err);
+                  }
+                });
+
+
+          }
+
 
           for (var i = 0; i < wordsFound.length; i++) {
-            Word.findByName(wordsFound[i], function(err, word){
-              if (err) {
-                res.send(err);
+              var tmpRes = verifyWord(wordsFound[i], res);
+              if (tmpRes !== undefined) {
+                confirmedWords.push(tmpRes);
               }
-              if (word !== []) {
-                confirmedWords.push(word);
-              }
-            })
           }
           res.json(confirmedWords);
 
