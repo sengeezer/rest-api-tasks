@@ -3,6 +3,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var Promise = require("bluebird");
 
 var Word = require('./models/word');
 
@@ -127,40 +128,59 @@ router.route('/words/:word_id')
               if (!err) {
                 var newResult = JSON.stringify(result);
 
-                if (String(result) !== '') {
-                  res(newResult);
-                }
+                // if (String(result) !== '') {
+                //   res(newResult);
+                // }
               }
 
               else {
-                res('Error in query: ' + err);
+                 return 'Error in query: ' + err;
               }
-            });
-          }
-
-          for (var i = 0; i < wordsFound.length; i++) {
-              // var tmpRes = 0;
-              verifyWord(wordsFound[i], function(res){
-                if (res) {
-                  console.log('res: ' + res);
-                  confirmedWords.push(res);
-                }
-
-                else {
-                  console.log('vW failed');
+            }).then(function(newResult){
+                // console.log('l140: ' + res);
+                if (String(newResult) !== '') {
+                  res(newResult);
+                  // return newResult;
+                  //confirmedWords.push(newResult);
                 }
               });
-              //if (prom !== undefined) {
-                // console.log('prom: ' + prom);
-              //}
-              // prom.then(function (doc) {
-              //   console.log('doc: ' + doc);
-              // });
-              // if (tmpRes !== undefined) {
-              //   confirmedWords.push(tmpRes);
-              // }
+
+            // );
           }
-          res.json(confirmedWords);
+
+          function assembleWF(req, resp) {
+
+            for (var i = 0; i < req.length; i++) {
+                verifyWord(req[i], function(resk){
+                  if (resk) {
+                    // console.log('res: ' + resk);
+                    // resp(confirmedWords.push(res));
+                    confirmedWords.push(resk);
+                    console.log(confirmedWords);
+                  }
+
+                  else {
+                    console.log('VW failed');
+                  }
+                });
+            }
+            console.log('loop finished');
+            resp(confirmedWords);
+
+
+          }
+
+          assembleWF(wordsFound, function(reso){
+            if (reso) {
+              res.json(confirmedWords);
+            }
+
+            // else {
+            //   res.json(confirmedWords);
+            // }
+          });
+
+
         }
       });
 
