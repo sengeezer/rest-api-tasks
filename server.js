@@ -116,9 +116,16 @@ router.route('/words/:word_id')
         }
 
         else {
-          var wordsFound = findWords(numberString);
-
+          var wordsFound;
+          // var wordsFound = findWords(numberString);
           var confirmedWords = [];
+
+          findWords(numberString).then(function(rval) {
+            wordsFound = rval;
+            // console.log('req before koop: ' + wordsFound);
+          }).catch(function() {
+            console.log('findWords failed');
+          });
 
           // check word candidates against dictionary
           function verifyWord(req, res) {
@@ -127,10 +134,6 @@ router.route('/words/:word_id')
             query.exec(function (err, result){
               if (!err) {
                 var newResult = JSON.stringify(result);
-
-                // if (String(result) !== '') {
-                //   res(newResult);
-                // }
               }
 
               else {
@@ -141,6 +144,7 @@ router.route('/words/:word_id')
                 if (String(newResult) !== '') {
                   res(newResult);
                   // return newResult;
+                  console.log('nr: ' + newResult);
                   //confirmedWords.push(newResult);
                 }
               });
@@ -148,39 +152,43 @@ router.route('/words/:word_id')
             // );
           }
 
-          function assembleWF(req, resp) {
+          function assembleWF(req) {
+            // var nreq = req;
+            return new Promise(function(resolve, reject) {
+              // console.log('i: ');
+              var koop = function(req){
+                // console.log('req in koop: ' + req);
+                for (var i = 0; i < req.length; i++) {
+                  console.log('i: ' + i);
+                  verifyWord(req[i], function(resk){
+                    if (resk) {
+                      confirmedWords.push(resk);
+                      console.log('confirmed: ' + confirmedWords);
+                    }
 
-            for (var i = 0; i < req.length; i++) {
-                verifyWord(req[i], function(resk){
-                  if (resk) {
-                    // console.log('res: ' + resk);
-                    // resp(confirmedWords.push(res));
-                    confirmedWords.push(resk);
-                    console.log(confirmedWords);
-                  }
+                    else {
+                      console.log('VW failed');
+                    }
+                  });
+                }
+              };
 
-                  else {
-                    console.log('VW failed');
-                  }
-                });
-            }
-            console.log('loop finished');
-            resp(confirmedWords);
-
-
+              resolve(koop(req));
+              console.log('loop finished');
+              //return confirmedWords;
+            });
           }
 
-          assembleWF(wordsFound, function(reso){
+          assembleWF(wordsFound).then(function(reso){
+            console.log('reso: ' + reso); // undefined
             if (reso) {
-              res.json(confirmedWords);
+              res.json(reso);
             }
 
-            // else {
-            //   res.json(confirmedWords);
-            // }
+            else {
+              res.json({ message: 'error on l179'});
+            }
           });
-
-
         }
       });
 
