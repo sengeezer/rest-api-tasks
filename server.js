@@ -9,6 +9,8 @@ var Word = require('./models/word');
 
 var findWords = require('./findWords').findWords;
 
+var assembleWF = require('./assembleWordsFound').assembleWordsFound;
+
 // Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -117,78 +119,26 @@ router.route('/words/:word_id')
 
         else {
           var wordsFound;
-          // var wordsFound = findWords(numberString);
           var confirmedWords = [];
 
           findWords(numberString).then(function(rval) {
             wordsFound = rval;
-            // console.log('req before koop: ' + wordsFound);
+
+            assembleWF(wordsFound, confirmedWords, Word).then(function(reso){
+              console.log('reso: ' + reso); // undefined
+              if (reso) {
+                res.json(reso);
+              }
+
+              else {
+                res.json({ message: 'error on l179'});
+              }
+            });
           }).catch(function() {
             console.log('findWords failed');
           });
 
-          // check word candidates against dictionary
-          function verifyWord(req, res) {
-            var query = Word.find({name: req});
 
-            query.exec(function (err, result){
-              if (!err) {
-                var newResult = JSON.stringify(result);
-              }
-
-              else {
-                 return 'Error in query: ' + err;
-              }
-            }).then(function(newResult){
-                // console.log('l140: ' + res);
-                if (String(newResult) !== '') {
-                  res(newResult);
-                  // return newResult;
-                  console.log('nr: ' + newResult);
-                  //confirmedWords.push(newResult);
-                }
-              });
-
-            // );
-          }
-
-          function assembleWF(req) {
-            // var nreq = req;
-            return new Promise(function(resolve, reject) {
-              // console.log('i: ');
-              var koop = function(req){
-                // console.log('req in koop: ' + req);
-                for (var i = 0; i < req.length; i++) {
-                  console.log('i: ' + i);
-                  verifyWord(req[i], function(resk){
-                    if (resk) {
-                      confirmedWords.push(resk);
-                      console.log('confirmed: ' + confirmedWords);
-                    }
-
-                    else {
-                      console.log('VW failed');
-                    }
-                  });
-                }
-              };
-
-              resolve(koop(req));
-              console.log('loop finished');
-              //return confirmedWords;
-            });
-          }
-
-          assembleWF(wordsFound).then(function(reso){
-            console.log('reso: ' + reso); // undefined
-            if (reso) {
-              res.json(reso);
-            }
-
-            else {
-              res.json({ message: 'error on l179'});
-            }
-          });
         }
       });
 
