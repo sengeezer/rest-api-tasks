@@ -15,9 +15,9 @@ function verifyWord(req, model) {
   }).then(function(newResult){
       if (String(newResult) !== '') {
         console.log('nr: ' + newResult);
-        return newResult;
+        // return newResult;
       }
-    });
+  });
 
 }
 
