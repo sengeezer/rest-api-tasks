@@ -4,15 +4,12 @@ var verifyWord = require('./verifyWord').verifyWord;
 
 function insideAWF(val, model) {
   return new Promise(function(resolve, reject) {
-    var vW = verifyWord(val, model);
-
-    if (vW !== null) {
-      resolve(vW);
+    // all vals passed correctly
+    var floop = function(val, model) {
+      return verifyWord(val, model);
     }
 
-    else {
-      reject(new Error('reject on insideAWF'));
-    }
+    resolve(floop(val, model));
   });
 }
 
@@ -20,16 +17,15 @@ function assembleWF(req, cW, Word) {
   return new Promise(function(resolve, reject) {
     var koop = function(req){
       for (var i = 0; i < req.length; i++) {
-        // console.log('inside for loop: ' + i);
-        // var resk = verifyWord(req[i], Word);
         insideAWF(req[i], Word).then(function(resk){
-          if (resk) {
+          if (resk !== undefined) {
             cW.push(resk);
+            // console.log('resk: ' + resk);
             console.log('confirmed: ' + cW);
           }
-          else {
-            console.log('VW failed: ' + resk); // undefined
-          }
+          // else {
+          //   console.log('VW failed: ' + resk); // undefined
+          // }
         });
       }
     };

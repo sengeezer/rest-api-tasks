@@ -3,7 +3,8 @@ var Promise = require("bluebird");
 // check word candidates against dictionary
 function verifyWord(req, model) {
 
-  var query = model.find({name: req});
+  var query = model.find({name: req}),
+      newResult;
 
   query.exec(function (err, result){
     if (!err) {
@@ -12,13 +13,13 @@ function verifyWord(req, model) {
     else {
        return 'Error in query: ' + err;
     }
-  }).then(function(newResult){
-      if (String(newResult) !== '') {
-        console.log('nr: ' + newResult);
-        // return newResult;
+  }).then(function(newRes){
+      if (String(newRes) !== '') {
+        console.log('nr: ' + newRes);
+        newResult = newRes;
+        return newResult;
       }
   });
-
 }
 
 module.exports = {
