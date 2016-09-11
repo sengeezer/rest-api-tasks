@@ -125,7 +125,8 @@ router.route('/words/:word_id')
             wordsFound = rval;
 
             assembleWF(wordsFound, confirmedWords, Word).then(function(reso){
-              console.log('reso: ' + reso); // undefined
+              console.log('reso: ' + reso);
+              
               if (reso) {
                 res.json(reso);
               }
