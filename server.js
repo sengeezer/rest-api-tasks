@@ -137,8 +137,6 @@ router.route('/words/:word_id')
           }).catch(function() {
             console.log('findWords failed');
           });
-
-
         }
       });
 
