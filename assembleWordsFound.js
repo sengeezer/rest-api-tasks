@@ -9,16 +9,18 @@ function assembleWF(req, cW, Word) {
       var i = 0;
 
       (function next() {
-        if (i++ > reqSize) return;
-          var resk = verifyWord(req[i], Word);
+        if (i++ > reqSize) {
+          return;
+        }
 
-          if (typeof resk !== 'undefined') {
-            cW.push(resk);
+        var resk = verifyWord(req[i], Word);
+        console.log('assemble');
+        if (typeof resk !== 'undefined') {
+          cW.push(resk);
+          //console.log('confirmed: ' + cW);
+        }
 
-            //console.log('confirmed: ' + cW);
-          }
-
-          next();
+        next();
       })();
 
       return cW;

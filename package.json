@@ -8,6 +8,7 @@
   "description": "A simple RESTful API",
   "main": "server.js",
   "dependencies": {
+    "async": "^2.0.1",
     "bluebird": "^3.4.6",
     "body-parser": "~1.0.1",
     "express": "~4.0.0",
