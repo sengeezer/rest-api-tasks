@@ -1,13 +1,23 @@
 var Promise = require("bluebird");
 
 // check word candidates against dictionary
-function verifyWord(req, model) {
+function verifyWord(req, model, callback) {
   // console.log('req: ' + req);
   var query = model.find({name: req}),
+      query2 = model.find({name: req}, function(err, result){
+        if (err) {
+          onErr(err, callback);
+        }
+
+        else {
+          // console.log(teams);
+          callback('', result);
+        }
+      }),
       parent = this,
       newResult;
 
-  query.exec(function (err, result){
+  query2.exec(function (err, result){
     if (!err) {
       result = JSON.stringify(result);
     }
@@ -22,11 +32,6 @@ function verifyWord(req, model) {
         return result;
       }
   });
-  // if (newResult !== null && newResult !== undefined) {
-  //   console.log('pn: ' + newResult);
-  // }
-  //
-  // return newResult;
 }
 
 module.exports = {

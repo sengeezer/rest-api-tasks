@@ -10,6 +10,7 @@ var Word = require('./models/word');
 var findWords = require('./findWords').findWords;
 
 var assembleWF = require('./assembleWordsFound').assembleWordsFound;
+var asWF = require('./assembleWordsFound').asWF;
 
 // Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -124,9 +125,9 @@ router.route('/words/:word_id')
           findWords(numberString).then(function(rval) {
             wordsFound = rval;
 
-            assembleWF(wordsFound, confirmedWords, Word).then(function(reso){
+            asWF(wordsFound, confirmedWords, Word).then(function(reso){
               console.log('reso: ' + reso);
-              
+
               if (reso) {
                 res.json(reso);
               }
