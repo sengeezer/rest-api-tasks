@@ -9,7 +9,6 @@ var Word = require('./models/word');
 
 var findWords = require('./findWords').findWords;
 
-var assembleWF = require('./assembleWordsFound').assembleWordsFound;
 var asWF = require('./assembleWordsFound').asWF;
 
 // Retrieve data from a POST
@@ -27,7 +26,7 @@ router.use(function(req, res, next) {
 });
 
 // Set up database
-var mongoose   = require('mongoose');
+var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/rest-api-dev');
 
 // Respond to basic request
