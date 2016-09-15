@@ -1,25 +1,27 @@
 var Promise = require("bluebird");
 var asyncDuring = require('async/during');
 
-var verifyWord = require('./verifyWord').verifyWord;
+var wordNumber = require('./models/word2');
 
-function asWF (req, cW, Word) {
+function asWF (req, cW) {
   return new Promise(function(resolve, reject) {
-  var reqSize = req.length;
-  var count = 0,
-      resk;
+    var reqSize = req.length;
+    var count = 0,
+        resk;
 
-  asyncDuring(
-    function (callback) {
+    asyncDuring(
+      function (callback) {
         return callback(null, count < reqSize);
-    },
-    function (callback) {
-        verifyWord(req[count], Word, function(err, verified) {
-          if (!err && (typeof verified !== 'undefined')) {
-            cW.push(verified);
-            //console.log('confd: ' + cW);
-          }
+      },
 
+      function (callback) {
+        wordNumber(req[count], function(err, verified) {
+          if (!err) {
+            if (typeof verified !== 'undefined') {
+              cW.push(verified);
+            }
+            console.log('confd: ' + verified);
+          }
           else if (err) {
             console.log('awf cb err: ' + err);
           }
@@ -27,18 +29,17 @@ function asWF (req, cW, Word) {
 
         count++;
         callback();
-    },
-    function (err) {
-      if (!err) {
+      },
+
+      function (err) {
+        if (err) {
+          console.log('during err: ' + err);
+        }
+
         resolve(cW);
       }
-
-      else {
-        console.log('during err: ' + err);
-      }
-    }
-  );
-});
+    );
+  });
 }
 
 module.exports = {

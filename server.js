@@ -5,7 +5,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var Promise = require("bluebird");
 
+var asyncWaterfall = require('async/waterfall');
+
 var Word = require('./models/word');
+var wordNumber = require('./models/word2');
 
 var findWords = require('./findWords').findWords;
 
@@ -124,7 +127,7 @@ router.route('/words/:word_id')
           findWords(numberString).then(function(rval) {
             wordsFound = rval;
 
-            asWF(wordsFound, confirmedWords, Word).then(function(reso){
+            asWF(wordsFound, confirmedWords).then(function(reso){
               console.log('reso: ' + reso);
 
               if (reso) {
@@ -138,6 +141,23 @@ router.route('/words/:word_id')
           }).catch(function() {
             console.log('findWords failed');
           });
+
+          asyncWaterfall([
+            function(callback) {
+              callback(null, 'one', 'two');
+            },
+            function(arg1, arg2, callback) {
+              // arg1 now equals 'one' and arg2 now equals 'two'
+              callback(null, 'three');
+            },
+            function(arg1, callback) {
+              // arg1 now equals 'three'
+              callback(null, 'done');
+            }
+          ], function (err, result) {
+            // result now equals 'done'
+          });
+
         }
       });
 
