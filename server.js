@@ -121,41 +121,27 @@ router.route('/words/:word_id')
         }
 
         else {
-          var wordsFound;
           var confirmedWords = [];
-
-          findWords(numberString).then(function(rval) {
-            wordsFound = rval;
-
-            asWF(wordsFound, confirmedWords).then(function(reso){
-              console.log('reso: ' + reso);
-
-              if (reso) {
-                res.json(reso);
-              }
-
-              else {
-                res.json({ message: 'error on l179'});
-              }
-            });
-          }).catch(function() {
-            console.log('findWords failed');
-          });
 
           asyncWaterfall([
             function(callback) {
-              callback(null, 'one', 'two');
+              findWords(numberString).then(function(found) {
+                callback(null, found);
+              });
             },
-            function(arg1, arg2, callback) {
-              // arg1 now equals 'one' and arg2 now equals 'two'
-              callback(null, 'three');
-            },
-            function(arg1, callback) {
-              // arg1 now equals 'three'
-              callback(null, 'done');
+            function(wordsFound, callback) {
+              // console.log(wordsFound);
+              var assembledWords = asWF(wordsFound, confirmedWords);
+              callback(null, assembledWords);
             }
           ], function (err, result) {
-            // result now equals 'done'
+              if (!err) {
+                res.json({result: 'result' + result});
+              }
+
+              else {
+                res.json({ message: 'error on l162: ' + err});
+              }
           });
 
         }

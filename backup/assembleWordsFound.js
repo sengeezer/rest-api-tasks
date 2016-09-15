@@ -4,7 +4,7 @@ var asyncDuring = require('async/during');
 var wordNumber = require('./models/word2');
 
 function asWF (req, cW) {
-
+  return new Promise(function(resolve, reject) {
     var reqSize = req.length;
     var count = 0,
         resk;
@@ -36,10 +36,10 @@ function asWF (req, cW) {
           console.log('during err: ' + err);
         }
 
-        return cW;
+        resolve(cW);
       }
     );
-
+  });
 }
 
 module.exports = {

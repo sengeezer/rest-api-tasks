@@ -15,7 +15,7 @@ module.exports = function(number, callback) {
     });
 
     var Word = db.model('Word', WordSchema);
-    Word.find({name: req}, function(err, result){
+    Word.find({name: number}, function(err, result){
       if (err) {
         onErr(err, callback);
       }
