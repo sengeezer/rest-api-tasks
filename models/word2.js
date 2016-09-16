@@ -1,9 +1,23 @@
-var mongoose = require('mongoose'),
 
-db = mongoose.createConnection('mongodb://localhost:27017/rest-api-dev');
+var mongoose = require('mongoose');
+var dbURI = 'mongodb://localhost:27017/rest-api-dev';
+
+var db = mongoose.createConnection(dbURI);
 db.on('error', console.error.bind(console, 'connection error:'));
 
-var onErr = function(err,callback){
+mongoose.connection.on('connected', function () {
+  console.log('Mongoose default connection open to ' + dbURI);
+});
+
+mongoose.connection.on('error',function (err) {
+  console.log('Mongoose default connection error: ' + err);
+});
+
+mongoose.connection.on('disconnected', function () {
+  console.log('Mongoose default connection disconnected');
+});
+
+var onErr = function(err, callback){
   mongoose.connection.close();
   callback(err);
 };

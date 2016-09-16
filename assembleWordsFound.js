@@ -1,11 +1,15 @@
-var Promise = require("bluebird");
-// var asyncDuring = require('async/during');
-var asyncWhilst = require('async/whilst');
+var mongoose = require('mongoose');
+mongoose.Promise = require("bluebird");
 
-var wordNumber = require('./models/word2');
+// var fresh = require('fresh-require');
+var asyncWhilst = require('async/whilst');
+var wordNumber2 = require('./models/awfWrap');
+
+// var wordNumber = require('./models/word2');
+
+// var wordNumbers = fresh('./models/word2', require);
 
 function asWF (req, cW) {
-
     var reqSize = req.length;
     var count = 0,
         resk;
@@ -13,7 +17,7 @@ function asWF (req, cW) {
     asyncWhilst(
       function() { return count < reqSize; },
       function(callback) {
-        wordNumber(req[count], function(err, verified) {
+        wordNumber2(req[count], function(err, verified) {
           console.log('verified: ' + verified);
           if (!err) {
             if (typeof verified !== 'undefined') {
@@ -24,7 +28,6 @@ function asWF (req, cW) {
           else if (err) {
             console.log('awf cb err: ' + err);
           }
-
         });
 
         count++;
@@ -33,43 +36,8 @@ function asWF (req, cW) {
       function(err, n) {
         console.log('err: ' + err + ' n: ' + n);
         return cW;
-
       }
     );
-    /*
-    asyncDuring(
-      function (callback) {
-        return callback(null, count < reqSize);
-      },
-
-      function (callback) {
-        wordNumber(req[count], function(err, verified) {
-          console.log('verified: ' + verified);
-          if (!err) {
-            if (typeof verified !== 'undefined') {
-              cW.push(verified);
-            }
-            console.log('confd: ' + verified);
-          }
-          else if (err) {
-            console.log('awf cb err: ' + err);
-          }
-
-        });
-
-        count++;
-        callback(cW);
-      },
-
-      function (err) {
-        if (err) {
-          console.log('during err: ' + err);
-        }
-
-        return cW;
-      }
-    );
-*/
 }
 
 module.exports = {

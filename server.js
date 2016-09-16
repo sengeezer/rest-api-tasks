@@ -4,11 +4,12 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var Promise = require("bluebird");
+var mongoose = require('mongoose');
 
 var asyncWaterfall = require('async/waterfall');
 
-var Word = require('./models/word');
-var wordNumber = require('./models/word2');
+// var Word = require('./models/word');
+// var wordNumber = require('./models/word2');
 
 var findWords = require('./findWords').findWords;
 
@@ -29,8 +30,8 @@ router.use(function(req, res, next) {
 });
 
 // Set up database
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/rest-api-dev');
+// mongoose.connect('mongodb://localhost:27017/rest-api-dev');
+require('./models/dbConnect');
 
 // Respond to basic request
 router.get('/', function(req, res) {
