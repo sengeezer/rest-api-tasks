@@ -1,5 +1,8 @@
 // Schema set up
 var mongoose = require('mongoose');
+
+mongoose.Promise = require("bluebird");
+
 var Schema = mongoose.Schema;
 
 var WordSchema = new Schema({

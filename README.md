@@ -14,6 +14,7 @@ To start the mongodb server, use `mongod --config /usr/local/etc/mongod.conf --d
 
 **Note:** Every time you run `seed` it will blow away all the data in your collections and re-populate them with whatever is in your /seeds directory.
 
-## Notes
+## Notes / tips
 
 * [NodeMon](http://nodemon.io/) used for more responsive development environment
+* [npm-check-updates](https://github.com/tjunnone/npm-check-updates) used to keep theird party modules up to date

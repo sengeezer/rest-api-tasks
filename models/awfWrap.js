@@ -1,5 +1,6 @@
 
 var mongoose = require('mongoose');
+mongoose.Promise = require("bluebird");
 var Word = require('./word');
 
 
@@ -9,14 +10,14 @@ var onErr = function(err, callback){
 };
 
 module.exports = function(number, callback) {
-    Word.find({name: number}, function(err, result){
-      if (err) {
-        onErr(err, callback);
-      }
+  Word.find({name: number}, function(err, result){
+    if (err) {
+      onErr(err, callback);
+    }
 
-      else {
-        mongoose.connection.close();
-        callback('', result);
-      }
-    });
+    else {
+      mongoose.connection.close();
+      callback('', result);
+    }
+  });
 };

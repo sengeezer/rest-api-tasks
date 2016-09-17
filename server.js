@@ -2,17 +2,14 @@
 
 var express = require('express');
 var app = express();
+
 var bodyParser = require('body-parser');
 var Promise = require("bluebird");
 var mongoose = require('mongoose');
 
 var asyncWaterfall = require('async/waterfall');
 
-// var Word = require('./models/word');
-// var wordNumber = require('./models/word2');
-
 var findWords = require('./findWords').findWords;
-
 var asWF = require('./assembleWordsFound').asWF;
 
 // Retrieve data from a POST
@@ -30,7 +27,6 @@ router.use(function(req, res, next) {
 });
 
 // Set up database
-// mongoose.connect('mongodb://localhost:27017/rest-api-dev');
 require('./models/dbConnect');
 
 // Respond to basic request
@@ -131,7 +127,6 @@ router.route('/words/:word_id')
               });
             },
             function(wordsFound, callback) {
-              // console.log(wordsFound);
               var assembledWords = asWF(wordsFound, confirmedWords);
               callback(null, assembledWords);
             }
@@ -144,7 +139,6 @@ router.route('/words/:word_id')
                 res.json({ message: 'error on l162: ' + err});
               }
           });
-
         }
       });
 

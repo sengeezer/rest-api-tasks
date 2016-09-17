@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+mongoose.Promise = require("bluebird");
+
 var dbURI = 'mongodb://localhost:27017/rest-api-dev';
 
 mongoose.connect(dbURI);
