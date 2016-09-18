@@ -142,6 +142,44 @@ router.route('/words/:word_id')
         }
       });
 
+      router.route('/words/number7/:word_number')
+        .get(function(req, res, next){
+          var numberString = req.params.word_number;
+
+          if(numberString.includes('0') || numberString.includes('1')) {
+            res.json({ message: '0 or 1 are not valid phoneword numbers'});
+          }
+
+          else {
+            req.wordNumber = numberString;
+            next();
+          }
+        });
+
+      router.route('/words/number7/:word_number?')
+        .get(function(req, res, next){
+          findWords(req.wordNumber).then(function(found) {
+            req.found = found;
+            next();
+          });
+
+          // res.json({ message: 'word number is ' + req.wordNumber});
+          // next();
+        });
+
+        router.route('/words/number7/:word_number?')
+          .get(function(req, res, next){
+            var confirmedWords = [];
+            req.aswf = asWF(req.found, confirmedWords);
+            next();
+          });
+
+          router.route('/words/number7/:word_number?')
+            .get(function(req, res, next){
+              res.json({ message: req.aswf });
+              next();
+            });
+
 // Define routes
 app.use('/api', router);
 

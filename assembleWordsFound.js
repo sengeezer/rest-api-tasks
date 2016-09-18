@@ -9,6 +9,14 @@ var wordNumber2 = require('./models/awfWrap');
 
 // var wordNumbers = fresh('./models/word2', require);
 
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 function asWF (req, cW) {
     var reqSize = req.length;
     var count = 0,
@@ -18,12 +26,15 @@ function asWF (req, cW) {
       function() { return count < reqSize; },
       function(callback) {
         wordNumber2(req[count], function(err, verified) {
-          console.log('verified: ' + verified);
+          // continues after db conn closed
+          // console.log('verified: ' + verified);
           if (!err) {
-            if (typeof verified !== 'undefined') {
+            if (typeof verified !== 'undefined' && !(isEmpty(verified))) {
+              console.log('verified: ' + verified);
               cW.push(verified);
             }
-            console.log('confd: ' + verified);
+            // works !
+            // console.log('confd: ' + cW);
           }
           else if (err) {
             console.log('awf cb err: ' + err);
