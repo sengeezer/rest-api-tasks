@@ -162,23 +162,20 @@ router.route('/words/:word_id')
             req.found = found;
             next();
           });
-
-          // res.json({ message: 'word number is ' + req.wordNumber});
-          // next();
         });
 
-        router.route('/words/number7/:word_number?')
-          .get(function(req, res, next){
-            var confirmedWords = [];
-            req.aswf = asWF(req.found, confirmedWords);
-            next();
-          });
+      router.route('/words/number7/:word_number?')
+        .get(function(req, res, next){
+          var confirmedWords = [];
+          req.aswf = asWF(req.found, confirmedWords);
+          next();
+        });
 
-          router.route('/words/number7/:word_number?')
-            .get(function(req, res, next){
-              res.json({ message: req.aswf });
-              next();
-            });
+      router.route('/words/number7/:word_number?')
+        .get(function(req, res, next){
+          res.json({ message: req.aswf });
+          next();
+        });
 
 // Define routes
 app.use('/api', router);
