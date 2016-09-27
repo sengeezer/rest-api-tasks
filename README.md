@@ -17,4 +17,4 @@ To start the mongodb server, use `mongod --config /usr/local/etc/mongod.conf --d
 ## Notes / tips
 
 * [NodeMon](http://nodemon.io/) used for more responsive development environment
-* [npm-check-updates](https://github.com/tjunnone/npm-check-updates) used to keep theird party modules up to date
+* [npm-check-updates](https://github.com/tjunnone/npm-check-updates) used to keep third party modules up to date
