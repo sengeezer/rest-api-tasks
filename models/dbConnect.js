@@ -25,4 +25,4 @@ process.on('SIGINT', function() {
   });
 });
 
-var Word = require('./word');
+var Word = require('./word').Word;

@@ -1,7 +1,7 @@
 
 var mongoose = require('mongoose');
 mongoose.Promise = require("bluebird");
-var Word = require('./word');
+var Word = require('./word').Word;
 
 
 var onErr = function(err, callback){
