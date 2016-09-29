@@ -10,6 +10,8 @@ mongoose.Promise = require("bluebird");
 
 var asyncWaterfall = require('async/waterfall');
 
+var Word = require('./models/word');
+
 var findWords = require('./findWords').findWords;
 var asWF = require('./assembleWordsFound').asWF;
 
