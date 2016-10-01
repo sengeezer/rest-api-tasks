@@ -1,14 +1,10 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require("bluebird");
 
-// var fresh = require('fresh-require');
 var asyncWhilst = require('async/whilst');
 var asyncQueue = require('async/queue');
 
 var wordNumber2 = require('./models/awfWrap');
-
-// var wordNumber = require('./models/word2');
-// var wordNumbers = fresh('./models/word2', require);
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -25,40 +21,7 @@ function asWF (req, cW) {
 
     var wnq = asyncQueue(function(task, callback) {
       process.nextTick(function(){
-      wordNumber2(task.rc, function(err, verified) {
-        // continues after db conn closed
-        if (!err) {
-          if (typeof verified !== 'undefined' && !(isEmpty(verified))) {
-            console.log('verified: ' + verified);
-            cW.push(verified);
-          }
-        }
-        else if (err) {
-          console.log('awf cb err: ' + err);
-        }
-      });
-    });
-      callback();
-    });
-
-    wnq.drain = function() {
-      console.log('all items have been processed');
-      return cW;
-    };
-
-    asyncWhilst(
-      function() { return count < reqSize; },
-      function(callback) {
-        //process.nextTick(function(){
-        wnq.push({ rc: req[count] }, function(err) {
-          if (err) {
-            console.log('queue error: ' + err);
-          }
-          // process.nextTick(callback);
-        });
-      //});
-        /*
-        wordNumber2(req[count], function(err, verified) {
+        wordNumber2(task.rc, function(err, verified) {
           // continues after db conn closed
           if (!err) {
             if (typeof verified !== 'undefined' && !(isEmpty(verified))) {
@@ -70,14 +33,30 @@ function asWF (req, cW) {
             console.log('awf cb err: ' + err);
           }
         });
-        */
+      });
+
+      callback();
+    });
+
+    wnq.drain = function() {
+      console.log('all items have been processed');
+      return cW;
+    };
+
+    asyncWhilst(
+      function() { return count < reqSize; },
+      function(callback) {
+        wnq.push({ rc: req[count] }, function(err) {
+          if (err) {
+            console.log('queue error: ' + err);
+          }
+        });
 
         count++;
         callback(null, count);
       },
       function(err, n) {
         console.log('err: ' + err + ' n: ' + n);
-        // return cW;
       }
     );
 }
