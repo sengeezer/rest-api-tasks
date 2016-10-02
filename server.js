@@ -15,6 +15,8 @@ var Word = require('./models/word').Word;
 var findWords = require('./findWords').findWords;
 var asWF = require('./assembleWordsFound').asWF;
 
+var letterChop = require('./letter-chop');
+
 // Retrieve data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -162,6 +164,8 @@ router.route('/words/:word_id')
       router.route('/words/number7/:word_number?')
         .get(function(req, res, next){
           findWords(req.wordNumber).then(function(found) {
+            // console.log('l165: ' + found[0]);
+            letterChop.init(found, 'a');
             req.found = found;
             next();
           });

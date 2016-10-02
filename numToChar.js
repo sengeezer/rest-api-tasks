@@ -3,6 +3,7 @@ var numPads = require('./numPads');
 var numToChar = function(numbers) {
   var result = [],
       summaryResult = [''];
+      
   for (var i = 0; i < numbers.length; i++) {
     for (var j = 0; j < summaryResult.length; j++) {
       var currResult = summaryResult[j];

@@ -12,7 +12,7 @@ var onErr = function(err, callback){
 };
 
 module.exports = function(toVerify, callback) {
-  var WCmm = WordCollection(toVerify);
+  var WCmm = WordCollection(toVerify.charAt(0));
 
   WCmm.find({name: toVerify}, function(err, result){
     if (err) {

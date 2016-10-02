@@ -16,6 +16,7 @@ function isEmpty(obj) {
 
 function asWF (req, cW) {
     var reqSize = req.length;
+    console.log(req.length);
     var count = 0,
         resk;
 
