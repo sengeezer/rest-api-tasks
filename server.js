@@ -165,9 +165,10 @@ router.route('/words/:word_id')
         .get(function(req, res, next){
           findWords(req.wordNumber).then(function(found) {
             // console.log('l165: ' + found[0]);
-            letterChop.init(found, 'a');
+            letterChop.init(found);
             req.found = found;
-            next();
+            // next();
+            res.json(req.found);
           });
         });
 
