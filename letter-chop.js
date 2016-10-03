@@ -32,7 +32,7 @@ function scan(set, currLetter) {
         subset[currLetter] = [];
       }
 
-      subset[currLetter].push('\n' + JSON.stringify({"name": set[x]}));
+      subset[currLetter].push('\n' + '\"' + set[x] + '\"');
     }
   }
 
