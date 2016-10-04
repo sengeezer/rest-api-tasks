@@ -61,6 +61,27 @@ function init(inSet) {
   scan(fullSet, currLetter);
 }
 
+function fileList(cb) {
+  fs.readdir('./letterChopTemp/', (err, files) => {
+    if (!err) {
+      var allFiles = JSON.stringify(files);
+
+      cb(files);
+    }
+  });
+}
+
+function getContents(file, cb) {
+  fs.readFile('./letterChopTemp/' + file, (err, data) => {
+    if (!err) {
+      // console.log('data: ' + data);
+      cb(data);
+    }
+  });
+}
+
 module.exports = {
-  init: init
+  init: init,
+  fileList: fileList,
+  getContents: getContents
 };

@@ -164,18 +164,36 @@ router.route('/words/:word_id')
       router.route('/words/number7/:word_number?')
         .get(function(req, res, next){
           findWords(req.wordNumber).then(function(found) {
-            // console.log('l165: ' + found[0]);
             letterChop.init(found);
-            req.found = found;
-            // next();
-            res.json(req.found);
+            letterChop.fileList(function(returned) {
+              req.foundFiles = returned;
+              next();
+            });
           });
         });
 
+        /*
+        router.route('/words/number7/:word_number?')
+          .get(function(req, res, next){
+            res.json(req.foundFiles);
+          });
+          */
+
       router.route('/words/number7/:word_number?')
         .get(function(req, res, next){
-          var confirmedWords = [];
-          req.aswf = asWF(req.found, confirmedWords);
+          var rff = req.foundFiles,
+              confirmedWords = [],
+              allCW = [];
+          for (var j = 0; j < rff.length; j++) {
+            console.log('j is: ' + rff[j]);
+            letterChop.getContents(rff[j], (returned) => {
+              allCW.push(asWF(returned, confirmedWords));
+            });
+
+            // allCW.push(asWF(letterChop.getContents(rff[j]), confirmedWords));
+          }
+          // req.aswf = asWF(req.found, confirmedWords);
+          req.aswf = allCW;
           next();
         });
 
