@@ -16,7 +16,7 @@ function isEmpty(obj) {
 
 function asWF (req, cW) {
     var reqSize = req.length;
-    console.log(req.length);
+    console.log('asWF req length: ' + req.length + ' req[0]: ' + req[0]);
     var count = 0,
         resk;
 
@@ -44,17 +44,30 @@ function asWF (req, cW) {
       return cW;
     };
 
+    function wnqPush(rc, cb) {
+      wnq.push(rc, function(err) {
+        if (err) {
+          console.log('queue error: ' + err);
+        }
+
+        else {
+          setImmediate(cb);
+        }
+      });
+    }
+
     asyncWhilst(
       function() { return count < reqSize; },
       function(callback) {
-        wnq.push({ rc: req[count] }, function(err) {
-          if (err) {
-            console.log('queue error: ' + err);
-          }
+        //console.log('line 50: ' + req[count]);
+        wnqPush({ rc: req[count] }, (returned) => {
+          //console.log('wnqPush: ' + returned);
+          count++;
+          callback(null, count);
         });
 
-        count++;
-        callback(null, count);
+        // count++;
+        // callback(null, count);
       },
       function(err, n) {
         console.log('err: ' + err + ' n: ' + n);

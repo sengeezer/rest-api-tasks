@@ -38,6 +38,7 @@ function scan(set, currLetter) {
 
   if(subset[currLetter] !== undefined) {
     var toWrite = '[' + subset[currLetter] + '\n]';
+    // var toWrite = subset[currLetter] + '\n';
 
     wipe(file(currLetter));
 
@@ -72,7 +73,7 @@ function fileList(cb) {
 }
 
 function getContents(file, cb) {
-  fs.readFile('./letterChopTemp/' + file, (err, data) => {
+  fs.readFile('./letterChopTemp/' + file, 'utf8', (err, data) => {
     if (!err) {
       // console.log('data: ' + data);
       cb(data);

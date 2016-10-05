@@ -187,12 +187,10 @@ router.route('/words/:word_id')
           for (var j = 0; j < rff.length; j++) {
             console.log('j is: ' + rff[j]);
             letterChop.getContents(rff[j], (returned) => {
-              allCW.push(asWF(returned, confirmedWords));
+              allCW.push(asWF(JSON.parse(returned)), confirmedWords);
             });
-
-            // allCW.push(asWF(letterChop.getContents(rff[j]), confirmedWords));
           }
-          // req.aswf = asWF(req.found, confirmedWords);
+
           req.aswf = allCW;
           next();
         });
