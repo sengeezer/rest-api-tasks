@@ -25,17 +25,3 @@ module.exports = function(toVerify, callback) {
     }
   });
 };
-/*
-module.exports = function(toVerify, callback) {
-  Word.find({name: toVerify}, function(err, result){
-    if (err) {
-      onErr(err, callback);
-    }
-
-    else {
-      mongoose.connection.close();
-      callback('', result);
-    }
-  });
-};
-*/

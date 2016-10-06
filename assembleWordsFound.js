@@ -40,7 +40,7 @@ function asWF (req, cW) {
     });
 
     wnq.drain = function() {
-      console.log('all items have been processed');
+      // console.log('all items have been processed');
       return cW;
     };
 
@@ -59,18 +59,14 @@ function asWF (req, cW) {
     asyncWhilst(
       function() { return count < reqSize; },
       function(callback) {
-        //console.log('line 50: ' + req[count]);
         wnqPush({ rc: req[count] }, (returned) => {
           //console.log('wnqPush: ' + returned);
           count++;
           callback(null, count);
         });
-
-        // count++;
-        // callback(null, count);
       },
-      function(err, n) {
-        console.log('err: ' + err + ' n: ' + n);
+      function(err, results) {
+        console.log('message: ' + err + ' results (count): ' + results);
       }
     );
 }
