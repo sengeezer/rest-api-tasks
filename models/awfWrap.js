@@ -5,6 +5,13 @@ var Word = require('./word').Word;
 
 var WordCollection = require('./word').WordCollection;
 
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 var onErr = function(err, callback){
   mongoose.connection.close();
@@ -19,9 +26,16 @@ module.exports = function(toVerify, callback) {
       onErr(err, callback);
     }
 
+    else if (!err){
+      // if (typeof result !== 'undefined' && !(isEmpty(result))) {
+      //   console.log('wrapRes: ' + result);
+      // }
+      // mongoose.connection.close();
+
+      callback('', result);
+    }
     else {
       mongoose.connection.close();
-      callback('', result);
     }
   });
 };

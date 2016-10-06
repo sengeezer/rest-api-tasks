@@ -14,9 +14,10 @@ function isEmpty(obj) {
     return true;
 }
 
-function asWF (req, cW) {
+function asWF (req, chkW) {
     var reqSize = req.length;
-    console.log('asWF req length: ' + req.length + ' req[0]: ' + req[0]);
+    // console.log('asWF req length: ' + req.length + ' req[0]: ' + req[0]);
+    // console.log('asWF chkW: ' + chkW);
     var count = 0,
         resk;
 
@@ -27,7 +28,7 @@ function asWF (req, cW) {
           if (!err) {
             if (typeof verified !== 'undefined' && !(isEmpty(verified))) {
               console.log('verified: ' + verified);
-              cW.push(verified);
+              chkW.push(verified);
             }
           }
           else if (err) {
@@ -41,7 +42,8 @@ function asWF (req, cW) {
 
     wnq.drain = function() {
       // console.log('all items have been processed');
-      return cW;
+      // console.log('drain: ' + chkW);
+      return chkW;
     };
 
     function wnqPush(rc, cb) {

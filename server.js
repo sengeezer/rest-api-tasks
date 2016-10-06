@@ -185,9 +185,9 @@ router.route('/words/:word_id')
               confirmedWords = [],
               allCW = [];
           for (var j = 0; j < rff.length; j++) {
-            console.log('j is: ' + rff[j]);
+            // console.log('j is: ' + rff[j]);
             letterChop.getContents(rff[j], (returned) => {
-              allCW.push(asWF(JSON.parse(returned)), confirmedWords);
+              allCW.push(asWF(JSON.parse(returned), confirmedWords));
             });
           }
 
