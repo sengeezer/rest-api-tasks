@@ -35,6 +35,15 @@ router.use(function(req, res, next) {
 // Set up database
 require('./models/dbConnect');
 
+function isEmpty(obj) {
+  for(var key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // Respond to basic request
 router.get('/', function(req, res) {
     res.json({ message: 'We\'ll do it live!' });
@@ -184,16 +193,18 @@ router.route('/words/:word_id')
             function() { return j < rff.length; },
             function(callback) {
               letterChop.getContents(rff[j], (returned) => {
+                confirmedWords = [];
                 asWF(JSON.parse(returned), confirmedWords, (nReturned) => {
-                  allCW.push(nReturned);
+                  if (typeof nReturned !== 'undefined' && !(isEmpty(nReturned))) {
+                    allCW.push(nReturned);
+                  }
                   j++;
                   callback(null, j);
-                });                
+                });
               });
             },
             function(err, results) {
-              console.log('message: ' + err + ' results (j): ' + results);
-              console.log('acw: ' + allCW);
+              console.log('Cumulative result: ' + allCW);
               req.aswf = allCW;
               next();
             }
@@ -202,7 +213,7 @@ router.route('/words/:word_id')
 
       router.route('/words/number7/:word_number?')
         .get(function(req, res, next){
-          res.json({ message: req.aswf });
+          res.json({ result: req.aswf });
           next();
         });
 

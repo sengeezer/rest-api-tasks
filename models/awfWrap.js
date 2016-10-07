@@ -6,11 +6,12 @@ var Word = require('./word').Word;
 var WordCollection = require('./word').WordCollection;
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
+  for(var key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      return false;
     }
-    return true;
+  }
+  return true;
 }
 
 var onErr = function(err, callback){
@@ -27,11 +28,6 @@ module.exports = function(toVerify, callback) {
     }
 
     else if (!err){
-      // if (typeof result !== 'undefined' && !(isEmpty(result))) {
-      //   console.log('wrapRes: ' + result);
-      // }
-      // mongoose.connection.close();
-
       callback('', result);
     }
     else {

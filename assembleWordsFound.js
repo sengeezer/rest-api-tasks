@@ -12,7 +12,6 @@ function isEmpty(obj) {
       return false;
     }
   }
-
   return true;
 }
 
@@ -24,10 +23,8 @@ function asWF (req, chkW, ncb) {
     var wnq = asyncQueue(function(task, callback) {
       process.nextTick(function(){
         wordNumber2(task.rc, function(err, verified) {
-          // continues after db conn closed
           if (!err) {
             if (typeof verified !== 'undefined' && !(isEmpty(verified))) {
-              console.log('verified: ' + verified);
               chkW.push(verified);
             }
           }
@@ -62,13 +59,12 @@ function asWF (req, chkW, ncb) {
       function() { return count < reqSize; },
       function(callback) {
         wnqPush({ rc: req[count] }, (returned) => {
-          //console.log('wnqPush: ' + returned);
           count++;
           callback(null, count);
         });
       },
       function(err, results) {
-        console.log('message: ' + err + ' results (count): ' + results);
+        // console.log('message: ' + err + ' results (count): ' + results);
         ncb(chkW);
       }
     );
