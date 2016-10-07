@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = require("bluebird");
 
 var asyncWaterfall = require('async/waterfall');
+var asyncWhilst = require('async/whilst');
 
 var Word = require('./models/word').Word;
 
@@ -172,27 +173,31 @@ router.route('/words/:word_id')
           });
         });
 
-        /*
-        router.route('/words/number7/:word_number?')
-          .get(function(req, res, next){
-            res.json(req.foundFiles);
-          });
-          */
-
       router.route('/words/number7/:word_number?')
         .get(function(req, res, next){
           var rff = req.foundFiles,
               confirmedWords = [],
-              allCW = [];
-          for (var j = 0; j < rff.length; j++) {
-            // console.log('j is: ' + rff[j]);
-            letterChop.getContents(rff[j], (returned) => {
-              allCW.push(asWF(JSON.parse(returned), confirmedWords));
-            });
-          }
+              allCW = [],
+              j = 0;
 
-          req.aswf = allCW;
-          next();
+          asyncWhilst(
+            function() { return j < rff.length; },
+            function(callback) {
+              letterChop.getContents(rff[j], (returned) => {
+                asWF(JSON.parse(returned), confirmedWords, (nReturned) => {
+                  allCW.push(nReturned);
+                  j++;
+                  callback(null, j);
+                });                
+              });
+            },
+            function(err, results) {
+              console.log('message: ' + err + ' results (j): ' + results);
+              console.log('acw: ' + allCW);
+              req.aswf = allCW;
+              next();
+            }
+          );
         });
 
       router.route('/words/number7/:word_number?')

@@ -7,17 +7,17 @@ var asyncQueue = require('async/queue');
 var wordNumber2 = require('./models/awfWrap');
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
+  for(var key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      return false;
     }
-    return true;
+  }
+
+  return true;
 }
 
-function asWF (req, chkW) {
+function asWF (req, chkW, ncb) {
     var reqSize = req.length;
-    // console.log('asWF req length: ' + req.length + ' req[0]: ' + req[0]);
-    // console.log('asWF chkW: ' + chkW);
     var count = 0,
         resk;
 
@@ -43,7 +43,7 @@ function asWF (req, chkW) {
     wnq.drain = function() {
       // console.log('all items have been processed');
       // console.log('drain: ' + chkW);
-      return chkW;
+      // return chkW;
     };
 
     function wnqPush(rc, cb) {
@@ -69,6 +69,7 @@ function asWF (req, chkW) {
       },
       function(err, results) {
         console.log('message: ' + err + ' results (count): ' + results);
+        ncb(chkW);
       }
     );
 }
