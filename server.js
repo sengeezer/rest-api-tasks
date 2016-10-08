@@ -4,7 +4,7 @@ var express = require('express');
 var app = express();
 
 var bodyParser = require('body-parser');
-// var Promise = require("bluebird");
+
 var mongoose = require('mongoose');
 mongoose.Promise = require("bluebird");
 
@@ -35,14 +35,8 @@ router.use(function(req, res, next) {
 // Set up database
 require('./models/dbConnect');
 
-function isEmpty(obj) {
-  for(var key in obj) {
-    if(obj.hasOwnProperty(key)) {
-      return false;
-    }
-  }
-  return true;
-}
+// Utilities
+var isEmpty = require('./utils/isEmpty');
 
 // Respond to basic request
 router.get('/', function(req, res) {

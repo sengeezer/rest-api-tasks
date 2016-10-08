@@ -5,14 +5,7 @@ var Word = require('./word').Word;
 
 var WordCollection = require('./word').WordCollection;
 
-function isEmpty(obj) {
-  for(var key in obj) {
-    if(obj.hasOwnProperty(key)) {
-      return false;
-    }
-  }
-  return true;
-}
+var isEmpty = require('./../utils/isEmpty');
 
 var onErr = function(err, callback){
   mongoose.connection.close();
