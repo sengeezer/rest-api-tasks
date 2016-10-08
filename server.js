@@ -1,5 +1,4 @@
 // Load modules
-
 var express = require('express');
 var app = express();
 
@@ -8,11 +7,9 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 mongoose.Promise = require("bluebird");
 
-var asyncWaterfall = require('async/waterfall');
 var asyncWhilst = require('async/whilst');
 
 var Word = require('./models/word').Word;
-
 var findWords = require('./findWords').findWords;
 var asWF = require('./assembleWordsFound').asWF;
 
@@ -107,109 +104,76 @@ router.route('/words/:word_id')
       });
   });
 
-  router.route('/words/name/:word_name')
-    .get(function(req, res){
-      Word.findByName(req.params.word_name, function(err, word){
-        if (err) {
-          res.send(err);
-        }
+router.route('/words/name/:word_name')
+  .get(function(req, res){
+    Word.findByName(req.params.word_name, function(err, word){
+      if (err) {
+        res.send(err);
+      }
 
-        res.json(word);
-      })
-    });
+      res.json(word);
+    })
+  });
 
-    router.route('/words/number/:word_number')
-      .get(function(req, res){
-        var numberString = req.params.word_number;
+router.route('/words/number/:word_number')
+  .get(function(req, res, next){
+    var numberString = req.params.word_number;
 
-        if(numberString.includes('0') || numberString.includes('1')) {
-          res.json({ message: '0 or 1 are not valid phoneword numbers'});
-        }
+    if(numberString.includes('0') || numberString.includes('1')) {
+      res.json({ message: '0 or 1 are not valid phoneword numbers'});
+    }
 
-        else {
-          var confirmedWords = [];
+    else {
+      req.wordNumber = numberString;
+      next();
+    }
+  });
 
-          asyncWaterfall([
-            function(callback) {
-              findWords(numberString).then(function(found) {
-                callback(null, found);
-              });
-            },
-            function(wordsFound, callback) {
-              var assembledWords = asWF(wordsFound, confirmedWords);
-              callback(null, assembledWords);
-            }
-          ], function (err, result) {
-              if (!err) {
-                res.json({result: 'result' + result});
-              }
-
-              else {
-                res.json({ message: 'error on l162: ' + err});
-              }
-          });
-        }
+router.route('/words/number/:word_number?')
+  .get(function(req, res, next){
+    findWords(req.wordNumber).then(function(found) {
+      letterChop.init(found);
+      letterChop.fileList(function(returned) {
+        req.foundFiles = returned;
+        next();
       });
+    });
+  });
 
-      router.route('/words/number7/:word_number')
-        .get(function(req, res, next){
-          var numberString = req.params.word_number;
+router.route('/words/number/:word_number?')
+  .get(function(req, res, next){
+    var rff = req.foundFiles,
+        confirmedWords = [],
+        allCW = [],
+        j = 0;
 
-          if(numberString.includes('0') || numberString.includes('1')) {
-            res.json({ message: '0 or 1 are not valid phoneword numbers'});
-          }
-
-          else {
-            req.wordNumber = numberString;
-            next();
-          }
-        });
-
-      router.route('/words/number7/:word_number?')
-        .get(function(req, res, next){
-          findWords(req.wordNumber).then(function(found) {
-            letterChop.init(found);
-            letterChop.fileList(function(returned) {
-              req.foundFiles = returned;
-              next();
-            });
+    asyncWhilst(
+      function() { return j < rff.length; },
+      function(callback) {
+        letterChop.getContents(rff[j], (returned) => {
+          confirmedWords = [];
+          asWF(JSON.parse(returned), confirmedWords, (nReturned) => {
+            if (typeof nReturned !== 'undefined' && !(isEmpty(nReturned))) {
+              allCW.push(nReturned);
+            }
+            j++;
+            callback(null, j);
           });
         });
+      },
+      function(err, results) {
+        console.log('Cumulative result: ' + allCW);
+        req.aswf = allCW;
+        next();
+      }
+    );
+  });
 
-      router.route('/words/number7/:word_number?')
-        .get(function(req, res, next){
-          var rff = req.foundFiles,
-              confirmedWords = [],
-              allCW = [],
-              j = 0;
-
-          asyncWhilst(
-            function() { return j < rff.length; },
-            function(callback) {
-              letterChop.getContents(rff[j], (returned) => {
-                confirmedWords = [];
-                asWF(JSON.parse(returned), confirmedWords, (nReturned) => {
-                  if (typeof nReturned !== 'undefined' && !(isEmpty(nReturned))) {
-                    allCW.push(nReturned);
-                  }
-                  j++;
-                  callback(null, j);
-                });
-              });
-            },
-            function(err, results) {
-              console.log('Cumulative result: ' + allCW);
-              req.aswf = allCW;
-              next();
-            }
-          );
-        });
-
-      router.route('/words/number7/:word_number?')
-        .get(function(req, res, next){
-          res.json({ result: req.aswf });
-          next();
-        });
+router.route('/words/number/:word_number?')
+  .get(function(req, res, next){
+    res.json({ result: req.aswf });
+    next();
+  });
 
 // Define routes
 app.use('/api', router);
